@@ -1,0 +1,15 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.env
+sagemaker_user_credentials.json
+*.ipynb
+qdrant_storage/
+!evaluate_answers.ipynb

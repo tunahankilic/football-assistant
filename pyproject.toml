@@ -1,0 +1,46 @@
+[project]
+name = "llm-twin"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "beautifulsoup4>=4.13.4",
+    "boto3>=1.40.12",
+    "chromedriver-autoinstaller>=0.6.4",
+    "click>=8.1.7",
+    "datasets>=4.0.0",
+    "html2text>=2025.4.15",
+    "langchain>=0.3.26",
+    "langchain-community>=0.3.27",
+    "langchain-openai>=0.3.30",
+    "loguru>=0.7.3",
+    "numpy>=2.3.1",
+    "openai>=1.97.0",
+    "poethepoet>=0.36.0",
+    "pydantic>=2.11.1",
+    "pymongo>=4.13.2",
+    "qdrant-client>=1.14.3",
+    "selenium>=4.34.2",
+    "sentence-transformers>=5.0.0",
+    "torch>=2.7.1",
+    "zenml[server]>=0.84.0",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+]
+
+
+[tool.poe.tasks]
+# Data pipelines
+run-digital-data-etl-coachesvoice = "uv run -m tools.run --run-etl --no-cache --etl-config-filename digital_data_etl_coachesvoice.yaml"
+
+run-feature-engineering-pipeline = "uv run python -m tools.run --no-cache --run-feature-engineering"
+
+# Utility pipelines
+run-export-artifact-to-json-pipeline = "uv run python -m tools.run --no-cache --run-export-artifact-to-json"
+
+## SageMaker
+create-sagemaker-role = "uv run python -m llm_engineering.infrastructure.aws.roles.create_sagemaker_role"

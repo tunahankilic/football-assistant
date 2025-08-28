@@ -1,0 +1,29 @@
+settings:
+  docker:
+    parent_image: 992382797823.dkr.ecr.eu-central-1.amazonaws.com/zenml-rlwlcs:latest
+    skip_build: True
+  orchestrator.sagemaker:
+    synchronous: false
+    
+parameters:
+  source_name: coachesvoice # [First Name(s)] [Last Name]
+  links:
+    # Personal Blog
+    - https://learning.coachesvoice.com/cv/4-2-4-formation/
+    - https://learning.coachesvoice.com/cv/3-2-4-1-formation-tactics-explained/
+    - https://learning.coachesvoice.com/cv/4-1-4-1-formation-football-tactics-explained/
+    - https://learning.coachesvoice.com/cv/4-3-2-1-formation-football-tactics/
+    - https://learning.coachesvoice.com/cv/4-3-3-football-tactics-explained-formation-liverpool-klopp-barcelona-guardiola/
+    - https://learning.coachesvoice.com/cv/3-5-2-formation-conte-mourinho-guardiola/
+    - https://learning.coachesvoice.com/cv/4-5-1-formation-football-tactics/
+    - https://learning.coachesvoice.com/cv/4-4-2-diamond-football-tactics-explained-klopp-potter-allegri/
+    - https://learning.coachesvoice.com/cv/the-4-2-3-1-football-tactics-pochettino-guardiola-flick-southgate/
+    - https://learning.coachesvoice.com/cv/4-4-2-football-tactics-ferguson-simeone-hasenhuttl-dyche/
+    - https://learning.coachesvoice.com/cv/3-4-3-formation-football-tactics-explained-tuchel-conte-pochettino-southgate/
+    - https://learning.coachesvoice.com/cv/4-2-2-2-football-tactics-explained-rangnick-hasenhuttl-pellegrini/
+    - https://learning.coachesvoice.com/cv/formations-football-tactics-explained-best-most-used/
+    - https://learning.coachesvoice.com/cv/4-2-3-1-formation-fundamentals/
+    - https://learning.coachesvoice.com/cv/4-3-3-formation-klopp-arteta-xavi/
+    - https://learning.coachesvoice.com/cv/3-5-2-formation-conte-mourinho-guardiola/
+    - https://learning.coachesvoice.com/cv/4-5-1-formation-football-tactics/
+    - https://learning.coachesvoice.com/cv/wm-formation-football-tactics-explained-tuchel-guardiola-chapman/

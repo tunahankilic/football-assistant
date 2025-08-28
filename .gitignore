@@ -14,3 +14,4 @@ sagemaker_user_credentials.json
 *.ipynb
 qdrant_storage/
 !evaluate_answers.ipynb
+.zen

@@ -11,6 +11,7 @@ wheels/
 .venv
 .env
 sagemaker_user_credentials.json
+sagemaker_execution_role.json
 *.ipynb
 qdrant_storage/
 !evaluate_answers.ipynb

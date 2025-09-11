@@ -5,42 +5,38 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "beautifulsoup4>=4.13.4",
-    "boto3>=1.40.12",
+    "beautifulsoup4>=4.13.5",
     "chromedriver-autoinstaller>=0.6.4",
-    "click>=8.1.7",
+    "click>=8.2.1",
     "datasets>=4.0.0",
     "html2text>=2025.4.15",
-    "langchain>=0.3.26",
-    "langchain-community>=0.3.27",
-    "langchain-openai>=0.3.30",
+    "jinja2>=3.1.6",
+    "langchain>=0.3.27",
+    "langchain-community>=0.3.21",
+    "langchain-openai>=0.3.33",
     "loguru>=0.7.3",
-    "numpy>=2.3.1",
-    "openai>=1.97.0",
-    "poethepoet>=0.36.0",
-    "pydantic>=2.11.1",
-    "pymongo>=4.13.2",
-    "qdrant-client>=1.14.3",
-    "selenium>=4.34.2",
-    "sentence-transformers>=5.0.0",
-    "torch>=2.7.1",
-    "zenml[server]>=0.84.0",
+    "numpy>=1.26.4",
+    "poethepoet>=0.37.0",
+    "pymongo>=4.15.0",
+    "qdrant-client>=1.12.1",
+    "rich>=14.1.0",
+    "sagemaker>=2.251.1",
+    "selenium>=4.35.0",
+    "sentence-transformers>=5.1.0",
+    "tiktoken>=0.11.0",
+    "torch>=2.8.0",
+    "webdriver-manager>=4.0.2",
+    "zenml[server]>=0.84.3",
 ]
 
 [dependency-groups]
-dev = [
-    "ipykernel>=6.29.5",
+aws = [
+    "sagemaker>=2.251.1",
 ]
 
 
 [tool.poe.tasks]
-# Data pipelines
-run-digital-data-etl-coachesvoice = "uv run -m tools.run --run-etl --no-cache --etl-config-filename digital_data_etl_coachesvoice.yaml"
-
-run-feature-engineering-pipeline = "uv run python -m tools.run --no-cache --run-feature-engineering"
-
-# Utility pipelines
-run-export-artifact-to-json-pipeline = "uv run python -m tools.run --no-cache --run-export-artifact-to-json"
-
 ## SageMaker
 create-sagemaker-role = "uv run python -m llm_engineering.infrastructure.aws.roles.create_sagemaker_role"
+create-sagemaker-execution-role = "uv run python -m llm_engineering.infrastructure.aws.roles.create_execution_role"
+deploy-inference-endpoint = "uv run python -m llm_engineering.infrastructure.aws.deploy.huggingface.run"

@@ -53,8 +53,8 @@ class Settings(BaseSettings):
     GPUS: int = 1  # Number of GPUs
     CPUS: int = 2  # Number of CPU cores
 
-    SAGEMAKER_ENDPOINT_CONFIG_INFERENCE: str = "twin"
-    SAGEMAKER_ENDPOINT_INFERENCE: str = "twin"
+    SAGEMAKER_ENDPOINT_CONFIG_INFERENCE: str = "football-assistant"
+    SAGEMAKER_ENDPOINT_INFERENCE: str = "football-assistant"
     TEMPERATURE_INFERENCE: float = 0.01
     TOP_P_INFERENCE: float = 0.9
     MAX_NEW_TOKENS_INFERENCE: int = 150
@@ -63,10 +63,6 @@ class Settings(BaseSettings):
     TEXT_EMBEDDING_MODEL_ID: str = "sentence-transformers/all-MiniLM-L6-v2"
     RERANKING_CROSS_ENCODER_MODEL_ID: str = "cross-encoder/ms-marco-MiniLM-L-4-v2"
     RAG_MODEL_DEVICE: str = "cpu"
-
-    # LinkedIn Credentials
-    LINKEDIN_USERNAME: str | None = None
-    LINKEDIN_PASSWORD: str | None = None
 
     @property
     def OPENAI_MAX_TOKEN_WINDOW(self) -> int:

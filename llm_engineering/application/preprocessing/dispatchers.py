@@ -20,7 +20,7 @@ from .embedding_data_handlers import (
     EmbeddingDataHandler,
     ArticleEmbeddingHandler,
     PostEmbeddingHandler,
-    #QueryEmbeddingHandler
+    QueryEmbeddingHandler
 )
 
 
@@ -88,8 +88,8 @@ class ChunkingDispatcher:
 class EmbeddingHandlerFactory:
     @staticmethod
     def create_handler(data_category: DataCategory) -> EmbeddingDataHandler:
-        #if data_category == DataCategory.QUERIES:
-        #    return QueryEmbeddingHandler()
+        if data_category == DataCategory.QUERIES:
+            return QueryEmbeddingHandler()
         if data_category == DataCategory.POSTS:
             return PostEmbeddingHandler()
         elif data_category == DataCategory.ARTICLES:

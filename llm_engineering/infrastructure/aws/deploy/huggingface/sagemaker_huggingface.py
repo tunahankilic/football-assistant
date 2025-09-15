@@ -9,7 +9,7 @@ try:
     from sagemaker.enums import EndpointType
     from sagemaker.huggingface import HuggingFaceModel
 except ModuleNotFoundError:
-    logger.warning("Couldn't load AWS or SageMaker imports. Run 'poetry install --with aws' to support AWS.")
+    logger.warning("Couldn't load AWS or SageMaker imports. Run 'uv add --group aws' to support AWS.")
 
 from llm_engineering.domain.inference import DeploymentStrategy
 from llm_engineering.settings import settings

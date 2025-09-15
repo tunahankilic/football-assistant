@@ -1376,6 +1376,7 @@ dependencies = [
     { name = "chromedriver-autoinstaller" },
     { name = "click" },
     { name = "datasets" },
+    { name = "fastapi" },
     { name = "html2text" },
     { name = "jinja2" },
     { name = "langchain" },
@@ -1393,6 +1394,7 @@ dependencies = [
     { name = "sentence-transformers" },
     { name = "tiktoken" },
     { name = "torch" },
+    { name = "uvicorn" },
     { name = "webdriver-manager" },
     { name = "zenml", extra = ["server"] },
 ]
@@ -1408,6 +1410,7 @@ requires-dist = [
     { name = "chromedriver-autoinstaller", specifier = ">=0.6.4" },
     { name = "click", specifier = ">=8.2.1" },
     { name = "datasets", specifier = ">=4.0.0" },
+    { name = "fastapi", specifier = ">=0.115.8" },
     { name = "html2text", specifier = ">=2025.4.15" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "langchain", specifier = ">=0.3.27" },
@@ -1424,6 +1427,7 @@ requires-dist = [
     { name = "sentence-transformers", specifier = ">=5.1.0" },
     { name = "tiktoken", specifier = ">=0.11.0" },
     { name = "torch", specifier = ">=2.8.0" },
+    { name = "uvicorn", specifier = ">=0.35.0" },
     { name = "webdriver-manager", specifier = ">=4.0.2" },
     { name = "zenml", extras = ["server"], specifier = ">=0.84.3" },
 ]

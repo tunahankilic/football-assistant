@@ -4,7 +4,7 @@ try:
     from sagemaker.enums import EndpointType
     from sagemaker.huggingface import get_huggingface_llm_image_uri
 except ModuleNotFoundError:
-    logger.warning("Couldn't load SageMaker imports. Run 'poetry install --with aws' to support AWS.")
+    logger.warning("Couldn't load SageMaker imports. Run 'uv add --group aws' to support AWS.")
 
 from llm_engineering.model.utils import ResourceManager
 from llm_engineering.settings import settings
@@ -18,7 +18,7 @@ def create_endpoint(endpoint_type=EndpointType.INFERENCE_COMPONENT_BASED) -> Non
 
     logger.info(f"Creating endpoint with endpoint_type = {endpoint_type} and model_id = {settings.HF_MODEL_ID}")
 
-    llm_image = get_huggingface_llm_image_uri("huggingface", version="2.2.0")
+    llm_image = get_huggingface_llm_image_uri("huggingface")
 
     resource_manager = ResourceManager()
     deployment_service = DeploymentService(resource_manager=resource_manager)

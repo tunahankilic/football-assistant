@@ -5,7 +5,7 @@ from loguru import logger
 try:
     from sagemaker.compute_resource_requirements.resource_requirements import ResourceRequirements
 except ModuleNotFoundError:
-    logger.warning("Couldn't load SageMaker imports. Run 'poetry install --with aws' to support AWS.")
+    logger.warning("Couldn't load SageMaker imports. Run 'uv add --group aws' to support AWS.")
 
 from llm_engineering.settings import settings
 

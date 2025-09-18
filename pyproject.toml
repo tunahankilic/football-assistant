@@ -39,6 +39,9 @@ dev = [
     "ruff>=0.13.0",
 ]
 
+[tool.ruff]
+exclude = ["*.ipynb", ".venv"]
+
 
 [tool.poe.tasks]
 ## Data Pipelines

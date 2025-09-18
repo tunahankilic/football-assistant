@@ -6,7 +6,7 @@ from loguru import logger
 
 from llm_engineering import settings
 from llm_engineering.application.rag.retriever import ContextRetriever
-from llm_engineering.application.utils import misc
+#from llm_engineering.application.utils import misc
 from llm_engineering.domain.embedded_chunks import EmbeddedChunk
 #from llm_engineering.infrastructure.opik_utils import configure_opik
 from llm_engineering.model.inference import InferenceExecutor, LLMInferenceSagemakerEndpoint

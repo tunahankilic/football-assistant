@@ -1,6 +1,5 @@
 from langchain_openai import ChatOpenAI
 
-from llm_engineering.application import utils
 from llm_engineering.domain.documents import SourceDocument
 from llm_engineering.domain.queries import Query
 from llm_engineering.settings import settings

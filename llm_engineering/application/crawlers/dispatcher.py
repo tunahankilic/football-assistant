@@ -3,11 +3,11 @@ from urllib.parse import urlparse
 from loguru import logger
 
 from .base import BaseCrawler
-#from .github import GitHubCrawler
-#from .linkedin import LinkedInCrawler
+
+# from .github import GitHubCrawler
+# from .linkedin import LinkedInCrawler
 from .medium import MediumCrawler
 from .custom_article import CustomArticleCrawler
-
 
 
 class CrawlerDispatcher:
@@ -21,7 +21,6 @@ class CrawlerDispatcher:
         """
         dispatcher = cls()
         return dispatcher
-    
 
     def register_medium(self) -> "CrawlerDispatcher":
         """
@@ -42,5 +41,7 @@ class CrawlerDispatcher:
             if re.match(pattern, url):
                 return crawler()
         else:
-            logger.warning(f"No crawler registered for {url}. Using CustomArticleCrawler.")
+            logger.warning(
+                f"No crawler registered for {url}. Using CustomArticleCrawler."
+            )
             return CustomArticleCrawler()

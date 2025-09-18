@@ -10,7 +10,9 @@ from llm_engineering.domain.documents import SourceDocument
 
 
 @step
-def crawl_links(source: SourceDocument, links: list[str]) -> Annotated[list[str], "crawled_links"]:
+def crawl_links(
+    source: SourceDocument, links: list[str]
+) -> Annotated[list[str], "crawled_links"]:
     dispatcher = CrawlerDispatcher.build().register_medium()
 
     logger.info(f"Starting to crawl {len(links)} link(s).")
@@ -31,7 +33,9 @@ def crawl_links(source: SourceDocument, links: list[str]) -> Annotated[list[str]
     return links
 
 
-def _crawl_link(dispatcher: CrawlerDispatcher, link: str, source: SourceDocument) -> tuple[bool, str]:
+def _crawl_link(
+    dispatcher: CrawlerDispatcher, link: str, source: SourceDocument
+) -> tuple[bool, str]:
     crawler = dispatcher.get_crawler(link)
     crawler_domain = urlparse(link).netloc
 
@@ -48,7 +52,9 @@ def _crawl_link(dispatcher: CrawlerDispatcher, link: str, source: SourceDocument
 def _add_to_metadata(metadata: dict, domain: str, successful_crawl: bool) -> dict:
     if domain not in metadata:
         metadata[domain] = {}
-    metadata[domain]["successful"] = metadata[domain].get("successful", 0) + successful_crawl
+    metadata[domain]["successful"] = (
+        metadata[domain].get("successful", 0) + successful_crawl
+    )
     metadata[domain]["total"] = metadata[domain].get("total", 0) + 1
 
     return metadata

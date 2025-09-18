@@ -1,12 +1,12 @@
-import os
-import torch
-from trl import SFTTrainer
-from datasets import load_dataset, concatenate_datasets
-from transformers import TrainingArguments, TextStreamer
-from unsloth import FastLanguageModel, is_bfloat16_supported
+# import os
+# import torch
+# from trl import SFTTrainer
+# from datasets import load_dataset, concatenate_datasets
+# from transformers import TrainingArguments, TextStreamer
+# from unsloth import FastLanguageModel#, is_bfloat16_supported
 
 
-
+"""
 max_seq_length = 2048
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name="unsloth/Meta-Llama-3.1-8B",
@@ -28,3 +28,4 @@ model = FastLanguageModel.get_peft_model(
 dataset1 = load_dataset("mlabonne/llmtwin")
 dataset2 = load_dataset("mlabonne/FineTome-Alpaca-100k", split="train[:10000]")
 dataset = concatenate_datasets([dataset1, dataset2])
+"""

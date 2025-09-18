@@ -5,7 +5,6 @@ from llm_engineering.domain.documents import ArticleDocument
 from .base import BaseSeleniumCrawler
 
 
-
 class MediumCrawler(BaseSeleniumCrawler):
     """
     Crawler for Medium articles.
@@ -28,7 +27,7 @@ class MediumCrawler(BaseSeleniumCrawler):
         logger.info(f"Extracting content from {link}")
         self.driver.get(link)
         self.scroll_page()
-        
+
         soup = BeautifulSoup(self.driver.page_source, "html.parser")
         title = soup.find_all("h1", class_="pw-post-title")
         subtitle = soup.find_all("h2", class_="pw-subtitle-paragraph")
@@ -38,7 +37,7 @@ class MediumCrawler(BaseSeleniumCrawler):
             "Subtitle": subtitle[0].string if subtitle else None,
             "Content": soup.get_text(),
         }
-        self.driver.close() # Terminate the Webdriver after extraction
+        self.driver.close()  # Terminate the Webdriver after extraction
 
         source = kwargs["source"]
         instance = self.model(

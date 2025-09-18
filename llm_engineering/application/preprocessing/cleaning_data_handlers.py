@@ -15,7 +15,6 @@ from llm_engineering.domain.documents import (
 from .operations import clean_text
 
 
-
 DocumentT = TypeVar("DocumentT", bound=Document)
 CleanedDocumentT = TypeVar("CleanedDocumentT", bound=CleanedDocument)
 

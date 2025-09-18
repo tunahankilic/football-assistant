@@ -4,7 +4,9 @@ try:
     from sagemaker.enums import EndpointType
     from sagemaker.huggingface import get_huggingface_llm_image_uri
 except ModuleNotFoundError:
-    logger.warning("Couldn't load SageMaker imports. Run 'uv add --group aws' to support AWS.")
+    logger.warning(
+        "Couldn't load SageMaker imports. Run 'uv add --group aws' to support AWS."
+    )
 
 from llm_engineering.model.utils import ResourceManager
 from llm_engineering.settings import settings
@@ -14,9 +16,13 @@ from .sagemaker_huggingface import DeploymentService, SagemakerHuggingfaceStrate
 
 
 def create_endpoint(endpoint_type=EndpointType.INFERENCE_COMPONENT_BASED) -> None:
-    assert settings.AWS_ARN_ROLE is not None, "AWS_ARN_ROLE is not set in the .env file."
+    assert settings.AWS_ARN_ROLE is not None, (
+        "AWS_ARN_ROLE is not set in the .env file."
+    )
 
-    logger.info(f"Creating endpoint with endpoint_type = {endpoint_type} and model_id = {settings.HF_MODEL_ID}")
+    logger.info(
+        f"Creating endpoint with endpoint_type = {endpoint_type} and model_id = {settings.HF_MODEL_ID}"
+    )
 
     llm_image = get_huggingface_llm_image_uri("huggingface")
 

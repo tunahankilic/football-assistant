@@ -2,10 +2,12 @@ from typing_extensions import Annotated
 from zenml import get_step_context, step
 
 from llm_engineering.application import utils
-from llm_engineering.application.preprocessing import ChunkingDispatcher, EmbeddingDispatcher
+from llm_engineering.application.preprocessing import (
+    ChunkingDispatcher,
+    EmbeddingDispatcher,
+)
 from llm_engineering.domain.chunks import Chunk
 from llm_engineering.domain.embedded_chunks import EmbeddedChunk
-
 
 
 @step
@@ -34,18 +36,18 @@ def chunk_and_embed(
         for batched_chunks in utils.misc.batch(chunks, 10):
             batched_embedded_chunks = EmbeddingDispatcher.dispatch(batched_chunks)
             embedded_chunks.extend(batched_embedded_chunks)
-        
-    metadata["embedding"] = _add_embeddings_metadata(embedded_chunks, metadata["embedding"])
+
+    metadata["embedding"] = _add_embeddings_metadata(
+        embedded_chunks, metadata["embedding"]
+    )
     metadata["num_chunks"] = len(embedded_chunks)
     metadata["num_embedded_chunks"] = len(embedded_chunks)
 
     step_context = get_step_context()
     step_context.add_output_metadata(
-        output_name="embedded_documents",
-        metadata=metadata
+        output_name="embedded_documents", metadata=metadata
     )
     return embedded_chunks
-
 
 
 def _add_chunks_metadata(chunks: list[Chunk], metadata: dict) -> dict:
@@ -65,19 +67,20 @@ def _add_chunks_metadata(chunks: list[Chunk], metadata: dict) -> dict:
             metadata[category] = chunk.metadata
         if "sources" not in metadata[category]:
             metadata[category]["sources"] = list()
-        
+
         metadata[category]["num_chunks"] = metadata[category].get("num_chunks", 0) + 1
         metadata[category]["sources"].append(chunk.source_name)
-    
+
     for value in metadata.values():
         if isinstance(value, dict) and "sources" in value:
             value["sources"] = list(set(value["sources"]))
-    
+
     return metadata
 
 
-
-def _add_embeddings_metadata(embedded_chunks: list[EmbeddedChunk], metadata: dict) -> dict:
+def _add_embeddings_metadata(
+    embedded_chunks: list[EmbeddedChunk], metadata: dict
+) -> dict:
     """
     Adds metadata for the embedded chunks.
 
@@ -94,11 +97,11 @@ def _add_embeddings_metadata(embedded_chunks: list[EmbeddedChunk], metadata: dic
             metadata[category] = embedded_chunk.metadata
         if "sources" not in metadata[category]:
             metadata[category]["sources"] = list()
-        
+
         metadata[category]["sources"].append(embedded_chunk.source_name)
-    
+
     for value in metadata.values():
         if isinstance(value, dict) and "sources" in value:
             value["sources"] = list(set(value["sources"]))
-    
+
     return metadata

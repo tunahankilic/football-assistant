@@ -8,13 +8,11 @@ from llm_engineering.domain.documents import ArticleDocument
 from .base import BaseCrawler
 
 
-
 class CustomArticleCrawler(BaseCrawler):
     model = ArticleDocument
 
     def __init__(self) -> None:
         super().__init__()
-
 
     def extract(self, link: str, **kwargs) -> None:
         """

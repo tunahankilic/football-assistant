@@ -4,7 +4,6 @@ from llm_engineering.domain.inference import Inference
 from llm_engineering.settings import settings
 
 
-
 class InferenceExecutor:
     def __init__(
         self,

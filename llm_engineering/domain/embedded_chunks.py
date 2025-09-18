@@ -7,7 +7,6 @@ from llm_engineering.domain.types import DataCategory
 from .base import VectorBaseDocument
 
 
-
 class EmbeddedChunk(VectorBaseDocument, ABC):
     content: str
     embedding: list[float] | None
@@ -32,13 +31,11 @@ class EmbeddedChunk(VectorBaseDocument, ABC):
         return context
 
 
-
 class EmbeddedPostChunk(EmbeddedChunk):
     class Config:
         name = "embedded_posts"
         category = DataCategory.POSTS
         use_vector_index = True
-
 
 
 class EmbeddedArticleChunk(EmbeddedChunk):
@@ -48,4 +45,3 @@ class EmbeddedArticleChunk(EmbeddedChunk):
         name = "embedded_articles"
         category = DataCategory.ARTICLES
         use_vector_index = True
-

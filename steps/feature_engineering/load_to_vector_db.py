@@ -6,9 +6,10 @@ from llm_engineering.application import utils
 from llm_engineering.domain.base import VectorBaseDocument
 
 
-
 @step
-def load_to_vector_db(documents: Annotated[list, "documents"]) -> Annotated[bool, "successful"]:
+def load_to_vector_db(
+    documents: Annotated[list, "documents"],
+) -> Annotated[bool, "successful"]:
     """
     Loads documents into the vector database.
 
@@ -23,5 +24,5 @@ def load_to_vector_db(documents: Annotated[list, "documents"]) -> Annotated[bool
                 document_class.bulk_insert(documents_batch)
             except Exception:
                 return False
-    
+
     return True

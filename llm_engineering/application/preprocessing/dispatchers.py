@@ -13,16 +13,15 @@ from .cleaning_data_handlers import (
 from .chunking_data_handlers import (
     ChunkingDataHandler,
     ArticleChunkingHandler,
-    PostChunkingHandler
+    PostChunkingHandler,
 )
 
 from .embedding_data_handlers import (
     EmbeddingDataHandler,
     ArticleEmbeddingHandler,
     PostEmbeddingHandler,
-    QueryEmbeddingHandler
+    QueryEmbeddingHandler,
 )
-
 
 
 class CleaningHandlerFactory:
@@ -34,7 +33,6 @@ class CleaningHandlerFactory:
             return ArticleCleaningHandler()
         else:
             raise ValueError("Unsupported data type")
-
 
 
 class CleaningDispatcher:
@@ -49,10 +47,9 @@ class CleaningDispatcher:
         logger.info(
             "Data cleaned successfully.",
             data_category=data_category,
-            cleaned_content_len=len(clean_model.content)
+            cleaned_content_len=len(clean_model.content),
         )
         return clean_model
-    
 
 
 class ChunkingHandlerFactory:
@@ -82,7 +79,6 @@ class ChunkingDispatcher:
         )
 
         return chunk_models
-
 
 
 class EmbeddingHandlerFactory:

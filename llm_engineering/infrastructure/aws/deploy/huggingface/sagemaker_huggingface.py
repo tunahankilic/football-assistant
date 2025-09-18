@@ -1,4 +1,3 @@
-
 import enum
 from typing import Optional
 
@@ -9,7 +8,9 @@ try:
     from sagemaker.enums import EndpointType
     from sagemaker.huggingface import HuggingFaceModel
 except ModuleNotFoundError:
-    logger.warning("Couldn't load AWS or SageMaker imports. Run 'uv add --group aws' to support AWS.")
+    logger.warning(
+        "Couldn't load AWS or SageMaker imports. Run 'uv add --group aws' to support AWS."
+    )
 
 from llm_engineering.domain.inference import DeploymentStrategy
 from llm_engineering.settings import settings
@@ -118,10 +119,16 @@ class DeploymentService:
 
         try:
             # Check if the endpoint configuration exists
-            if self.resource_manager.endpoint_config_exists(endpoint_config_name=endpoint_config_name):
-                logger.info(f"Endpoint configuration {endpoint_config_name} exists. Using existing configuration...")
+            if self.resource_manager.endpoint_config_exists(
+                endpoint_config_name=endpoint_config_name
+            ):
+                logger.info(
+                    f"Endpoint configuration {endpoint_config_name} exists. Using existing configuration..."
+                )
             else:
-                logger.info(f"Endpoint configuration{endpoint_config_name} does not exist.")
+                logger.info(
+                    f"Endpoint configuration{endpoint_config_name} does not exist."
+                )
 
             # Prepare and deploy the HuggingFace model
             self.prepare_and_deploy_model(
@@ -135,7 +142,9 @@ class DeploymentService:
                 gpu_instance_type=gpu_instance_type,
             )
 
-            logger.info(f"Successfully deployed/updated model to endpoint {endpoint_name}.")
+            logger.info(
+                f"Successfully deployed/updated model to endpoint {endpoint_name}."
+            )
         except Exception as e:
             logger.error(f"Failed to deploy model to SageMaker: {e}")
 

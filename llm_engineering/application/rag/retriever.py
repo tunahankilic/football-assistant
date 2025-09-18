@@ -22,36 +22,50 @@ class ContextRetriever:
         self._query_expander = QueryExpansion(mock=mock)
         self._metadata_extractor = SelfQuery(mock=mock)
         self._reranker = Reranker(mock=mock)
-    
+
     def search(
-            self,
-            query: str, 
-            k: int = 3,
-            expand_to_n_queries: int = 3,
+        self,
+        query: str,
+        k: int = 3,
+        expand_to_n_queries: int = 3,
     ) -> list:
         query_model = Query.from_str(query)
 
         query_model = self._metadata_extractor.generate(query_model)
-        logger.info("Successfully extracted source_id from the query", source_id=query_model.source_id)
-        n_generated_queries = self._query_expander.generate(query_model, expand_to_n=expand_to_n_queries)
-        logger.info("Successfully generated queries for search", num_queries=len(n_generated_queries))
+        logger.info(
+            "Successfully extracted source_id from the query",
+            source_id=query_model.source_id,
+        )
+        n_generated_queries = self._query_expander.generate(
+            query_model, expand_to_n=expand_to_n_queries
+        )
+        logger.info(
+            "Successfully generated queries for search",
+            num_queries=len(n_generated_queries),
+        )
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            search_tasks = [executor.submit(self._search, _query_model, k) for _query_model in n_generated_queries]
+            search_tasks = [
+                executor.submit(self._search, _query_model, k)
+                for _query_model in n_generated_queries
+            ]
 
-            n_k_documents = [task.result() for task in concurrent.futures.as_completed(search_tasks)]
+            n_k_documents = [
+                task.result() for task in concurrent.futures.as_completed(search_tasks)
+            ]
             n_k_documents = utils.misc.flatten(n_k_documents)
-            n_k_documents = list(set(n_k_documents)) # Remove duplicates
-        
-        logger.info("All documents retrieved successfully.", num_documents=len(n_k_documents))
+            n_k_documents = list(set(n_k_documents))  # Remove duplicates
+
+        logger.info(
+            "All documents retrieved successfully.", num_documents=len(n_k_documents)
+        )
 
         if len(n_k_documents) > 0:
             k_documents = self.rerank(query, chunks=n_k_documents, keep_top_k=k)
         else:
             k_documents = []
-        
-        return k_documents
 
+        return k_documents
 
     def _search(self, query: Query, k: int = 3) -> list[EmbeddedChunk]:
         assert k >= 3, "k should be >= 3"
@@ -87,25 +101,22 @@ class ContextRetriever:
         retrieved_chunks = post_chunks + articles_chunks
 
         return retrieved_chunks
-    
+
     def rerank(
-            self,
-            query: str | Query,
-            chunks: list[EmbeddedChunk],
-            keep_top_k: int,
+        self,
+        query: str | Query,
+        chunks: list[EmbeddedChunk],
+        keep_top_k: int,
     ) -> list[EmbeddedChunk]:
         if isinstance(query, str):
             query = Query.from_str(query)
-        
+
         reranked_documents = self._reranker.generate(
-            query=query,
-            chunks=chunks,
-            keep_top_k=keep_top_k
+            query=query, chunks=chunks, keep_top_k=keep_top_k
         )
 
-        logger.info("Documents ranked successfully.", num_documents=len(reranked_documents))
+        logger.info(
+            "Documents ranked successfully.", num_documents=len(reranked_documents)
+        )
 
         return reranked_documents
-
-
-    

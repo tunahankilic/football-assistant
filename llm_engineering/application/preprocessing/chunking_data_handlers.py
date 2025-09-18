@@ -16,7 +16,6 @@ CleanedDocumentT = TypeVar("CleanedDocumentT", bound=CleanedDocument)
 ChunkT = TypeVar("ChunkT", bound=Chunk)
 
 
-
 class ChunkingDataHandler(ABC, Generic[CleanedDocumentT, ChunkT]):
     """
     Abstract class for all Chunking data handlers.
@@ -48,7 +47,9 @@ class ArticleChunkingHandler(ChunkingDataHandler):
 
         cleaned_content = data_model.content
         chunks = chunk_article(
-            cleaned_content, min_length=self.metadata["min_length"], max_length=self.metadata["max_length"]
+            cleaned_content,
+            min_length=self.metadata["min_length"],
+            max_length=self.metadata["max_length"],
         )
 
         for chunk in chunks:
@@ -66,7 +67,6 @@ class ArticleChunkingHandler(ChunkingDataHandler):
             data_models_list.append(model)
 
         return data_models_list
-    
 
 
 class PostChunkingHandler(ChunkingDataHandler):
@@ -82,7 +82,9 @@ class PostChunkingHandler(ChunkingDataHandler):
 
         cleaned_content = data_model.content
         chunks = chunk_text(
-            cleaned_content, chunk_size=self.metadata["chunk_size"], chunk_overlap=self.metadata["chunk_overlap"]
+            cleaned_content,
+            chunk_size=self.metadata["chunk_size"],
+            chunk_overlap=self.metadata["chunk_overlap"],
         )
 
         for chunk in chunks:

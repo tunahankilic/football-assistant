@@ -4,7 +4,6 @@ from llm_engineering.domain.base import VectorBaseDocument
 from llm_engineering.domain.types import DataCategory
 
 
-
 class Query(VectorBaseDocument):
     content: str
     source_id: UUID4 | None = None
@@ -20,7 +19,7 @@ class Query(VectorBaseDocument):
         Create a Query instance from a string.
         """
         return Query(content=query.strip("\n"))
-    
+
     def replace_content(self, new_content: str) -> "Query":
         """
         Replace the content of the query with new content.
@@ -30,9 +29,8 @@ class Query(VectorBaseDocument):
             content=new_content,
             source_id=self.source_id,
             source_name=self.source_name,
-            metadata=self.metadata
+            metadata=self.metadata,
         )
-    
 
 
 class EmbeddedQuery(Query):

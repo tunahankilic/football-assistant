@@ -32,10 +32,14 @@ Provide your response in JSON format.
 
     @classmethod
     def get_system_prompt(cls) -> Prompt:
-        assert cls.dataset_type is not None, "Dataset type must be set before calling get_system_prompt()"
+        assert cls.dataset_type is not None, (
+            "Dataset type must be set before calling get_system_prompt()"
+        )
 
         dataset_format = (
-            "instruction-answer pairs" if cls.dataset_type == DatasetType.INSTRUCTION else "instruction-answer triples"
+            "instruction-answer pairs"
+            if cls.dataset_type == DatasetType.INSTRUCTION
+            else "instruction-answer triples"
         )
         input_variables = {
             "dataset_format": dataset_format,
@@ -49,20 +53,26 @@ Provide your response in JSON format.
         )
 
     @classmethod
-    def get_prompts(cls, documents: list[CleanedDocument]) -> dict[DataCategory, list[GenerateDatasetSamplesPrompt]]:
+    def get_prompts(
+        cls, documents: list[CleanedDocument]
+    ) -> dict[DataCategory, list[GenerateDatasetSamplesPrompt]]:
         documents = generation_utils.extract_substrings(documents)
 
         grouped_prompts = {}
         grouped_cleaned_documents = CleanedDocument.group_by_category(documents)
         for category, category_documents in grouped_cleaned_documents.items():
-            category_prompts = [cls.get_prompt(document) for document in category_documents]
+            category_prompts = [
+                cls.get_prompt(document) for document in category_documents
+            ]
             grouped_prompts[category] = category_prompts
 
         return grouped_prompts
 
     @classmethod
     def get_prompt(cls, document: CleanedDocument) -> GenerateDatasetSamplesPrompt:
-        assert cls.prompt_template_str is not None, "Prompt template must be set before calling get_prompt()"
+        assert cls.prompt_template_str is not None, (
+            "Prompt template must be set before calling get_prompt()"
+        )
 
         data_category = document.get_category()
 
@@ -97,7 +107,9 @@ Provide your response in JSON format.
         test_size: float = 0.2,
         mock: bool = False,
     ) -> TrainTestSplit:
-        assert cls.dataset_type is not None, "Dataset type must be set before calling generate()"
+        assert cls.dataset_type is not None, (
+            "Dataset type must be set before calling generate()"
+        )
 
         def _to_langchain(
             prompt: GenerateDatasetSamplesPrompt,
@@ -110,9 +122,13 @@ Provide your response in JSON format.
             return messages
 
         if mock:
-            llm = FakeListLLM(responses=[constants.get_mocked_response(cls.dataset_type)])
+            llm = FakeListLLM(
+                responses=[constants.get_mocked_response(cls.dataset_type)]
+            )
         else:
-            assert settings.OPENAI_API_KEY is not None, "OpenAI API key must be set to generate datasets"
+            assert settings.OPENAI_API_KEY is not None, (
+                "OpenAI API key must be set to generate datasets"
+            )
 
             llm = ChatOpenAI(
                 model=settings.OPENAI_MODEL_ID,
@@ -120,13 +136,17 @@ Provide your response in JSON format.
                 max_tokens=2000 if cls.dataset_type == DatasetType.PREFERENCE else 1200,
                 temperature=0.7,
             )
-        parser = ListPydanticOutputParser(pydantic_object=cls._get_dataset_sample_type())
+        parser = ListPydanticOutputParser(
+            pydantic_object=cls._get_dataset_sample_type()
+        )
 
         chain = llm | parser
 
         datasets = {}
         for category, category_prompts in prompts.items():
-            langchain_category_prompts = [_to_langchain(prompt) for prompt in category_prompts]
+            langchain_category_prompts = [
+                _to_langchain(prompt) for prompt in category_prompts
+            ]
             batches = utils.misc.batch(langchain_category_prompts, size=24)
 
             flattened_instruct_dataset_samples = []
@@ -135,15 +155,23 @@ Provide your response in JSON format.
                     batched_dataset_samples = chain.batch(batch, stop=None)
 
                     for instruct_dataset_sample_batch in batched_dataset_samples:
-                        flattened_instruct_dataset_samples.extend(instruct_dataset_sample_batch)
+                        flattened_instruct_dataset_samples.extend(
+                            instruct_dataset_sample_batch
+                        )
                 except OutputParserException:
-                    logger.exception(f"Failed to parse the output JSON for a batch for category {category}")
+                    logger.exception(
+                        f"Failed to parse the output JSON for a batch for category {category}"
+                    )
 
             dataset = domain.dataset.build_dataset(
-                dataset_type=cls.dataset_type, category=category, samples=flattened_instruct_dataset_samples
+                dataset_type=cls.dataset_type,
+                category=category,
+                samples=flattened_instruct_dataset_samples,
             )
             datasets[category] = dataset
-            logger.info(f"Generated {len(dataset.samples)} samples for category '{category}'.")
+            logger.info(
+                f"Generated {len(dataset.samples)} samples for category '{category}'."
+            )
 
         processed_datasets = cls.post_process_datasets(datasets, test_size=test_size)
 
@@ -152,7 +180,10 @@ Provide your response in JSON format.
     @classmethod
     def _get_dataset_sample_type(
         cls,
-    ) -> type[domain.dataset.InstructDatasetSample] | type[domain.dataset.PreferenceDatasetSample]:
+    ) -> (
+        type[domain.dataset.InstructDatasetSample]
+        | type[domain.dataset.PreferenceDatasetSample]
+    ):
         return (
             domain.dataset.InstructDatasetSample
             if cls.dataset_type == DatasetType.INSTRUCTION
@@ -162,7 +193,9 @@ Provide your response in JSON format.
     @classmethod
     @abstractmethod
     def post_process_datasets(
-        cls, datasets: dict[DataCategory, domain.dataset.InstructDataset], test_size: float
+        cls,
+        datasets: dict[DataCategory, domain.dataset.InstructDataset],
+        test_size: float,
     ) -> TrainTestSplit:
         pass
 
@@ -196,7 +229,9 @@ class InstructionDatasetGenerator(DatasetGenerator):
 
     @classmethod
     def post_process_datasets(
-        cls, datasets: dict[DataCategory, domain.dataset.InstructDataset], test_size: float
+        cls,
+        datasets: dict[DataCategory, domain.dataset.InstructDataset],
+        test_size: float,
     ) -> TrainTestSplit:
         train_test_split = generation_utils.create_instruct_train_test_split(
             datasets, test_size=test_size, random_state=42
@@ -237,7 +272,9 @@ Extract:
 
     @classmethod
     def post_process_datasets(
-        cls, datasets: dict[DataCategory, domain.dataset.PreferenceDataset], test_size: float
+        cls,
+        datasets: dict[DataCategory, domain.dataset.PreferenceDataset],
+        test_size: float,
     ) -> TrainTestSplit:
         datasets = generation_utils.filter_short_answers(datasets)
         datasets = generation_utils.filter_answer_format(datasets)

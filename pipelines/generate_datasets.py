@@ -13,11 +13,17 @@ def generate_datasets(
     mock: bool = False,
 ) -> None:
     cleaned_documents = cd_steps.query_feature_store()
-    prompts = cd_steps.create_prompts(documents=cleaned_documents, dataset_type=dataset_type)
+    prompts = cd_steps.create_prompts(
+        documents=cleaned_documents, dataset_type=dataset_type
+    )
     if dataset_type == DatasetType.INSTRUCTION:
-        dataset = cd_steps.generate_intruction_dataset(prompts=prompts, test_split_size=test_split_size, mock=mock)
+        dataset = cd_steps.generate_intruction_dataset(
+            prompts=prompts, test_split_size=test_split_size, mock=mock
+        )
     elif dataset_type == DatasetType.PREFERENCE:
-        dataset = cd_steps.generate_preference_dataset(prompts=prompts, test_split_size=test_split_size, mock=mock)
+        dataset = cd_steps.generate_preference_dataset(
+            prompts=prompts, test_split_size=test_split_size, mock=mock
+        )
     else:
         raise ValueError(f"Invalid dataset type: {dataset_type}")
 

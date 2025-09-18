@@ -27,8 +27,14 @@ def create_instruct_train_test_split(
             train_samples_dicts, test_samples_dicts = train_test_split(
                 samples_dicts, test_size=test_size, random_state=random_state
             )
-            train_samples = [InstructDatasetSample(**sample_dict) for sample_dict in train_samples_dicts]
-            test_samples = [InstructDatasetSample(**sample_dict) for sample_dict in test_samples_dicts]
+            train_samples = [
+                InstructDatasetSample(**sample_dict)
+                for sample_dict in train_samples_dicts
+            ]
+            test_samples = [
+                InstructDatasetSample(**sample_dict)
+                for sample_dict in test_samples_dicts
+            ]
         else:
             train_samples = []
             test_samples = []
@@ -39,7 +45,9 @@ def create_instruct_train_test_split(
         train_data[category] = train_dataset
         test_data[category] = test_dataset
 
-    return InstructTrainTestSplit(train=train_data, test=test_data, test_split_size=test_size)
+    return InstructTrainTestSplit(
+        train=train_data, test=test_data, test_split_size=test_size
+    )
 
 
 def create_preference_train_test_split(
@@ -56,8 +64,14 @@ def create_preference_train_test_split(
             train_samples_dicts, test_samples_dicts = train_test_split(
                 samples_dicts, test_size=test_size, random_state=random_state
             )
-            train_samples = [PreferenceDatasetSample(**sample_dict) for sample_dict in train_samples_dicts]
-            test_samples = [PreferenceDatasetSample(**sample_dict) for sample_dict in test_samples_dicts]
+            train_samples = [
+                PreferenceDatasetSample(**sample_dict)
+                for sample_dict in train_samples_dicts
+            ]
+            test_samples = [
+                PreferenceDatasetSample(**sample_dict)
+                for sample_dict in test_samples_dicts
+            ]
         else:
             train_samples = []
             test_samples = []
@@ -68,7 +82,9 @@ def create_preference_train_test_split(
         train_data[category] = train_dataset
         test_data[category] = test_dataset
 
-    return PreferenceTrainTestSplit(train=train_data, test=test_data, test_split_size=test_size)
+    return PreferenceTrainTestSplit(
+        train=train_data, test=test_data, test_split_size=test_size
+    )
 
 
 def filter_short_answers(
@@ -80,14 +96,18 @@ def filter_short_answers(
     filtered_data = {}
     for category, dataset in data.items():
         filetered_dataset_samples = list(filter(is_long_enough, dataset.samples))
-        filtered_dataset = PreferenceDataset(category=category, samples=filetered_dataset_samples)
+        filtered_dataset = PreferenceDataset(
+            category=category, samples=filetered_dataset_samples
+        )
 
         filtered_data[category] = filtered_dataset
 
     return filtered_data
 
 
-def filter_answer_format(data: dict[DataCategory, PreferenceDataset]) -> dict[DataCategory, PreferenceDataset]:
+def filter_answer_format(
+    data: dict[DataCategory, PreferenceDataset],
+) -> dict[DataCategory, PreferenceDataset]:
     def is_valid_format(example: PreferenceDatasetSample) -> bool:
         chosen = example.chosen
 
@@ -96,7 +116,9 @@ def filter_answer_format(data: dict[DataCategory, PreferenceDataset]) -> dict[Da
     filtered_data = {}
     for category, dataset in data.items():
         filetered_dataset_samples = list(filter(is_valid_format, dataset.samples))
-        filtered_dataset = PreferenceDataset(category=category, samples=filetered_dataset_samples)
+        filtered_dataset = PreferenceDataset(
+            category=category, samples=filetered_dataset_samples
+        )
 
         filtered_data[category] = filtered_dataset
 

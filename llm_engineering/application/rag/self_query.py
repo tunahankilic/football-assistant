@@ -8,17 +8,16 @@ from .base import RAGStep
 from .prompt_templates import SelfQueryTemplate
 
 
-
 class SelfQuery(RAGStep):
     def generate(self, query: Query) -> Query:
         if self._mock:
             return query
-        
+
         prompt = SelfQueryTemplate().create_template()
         model = ChatOpenAI(
             model=settings.OPENAI_MODEL_ID,
             api_key=settings.OPENAI_API_KEY,
-            temperature=0
+            temperature=0,
         )
         chain = prompt | model
         response = chain.invoke({"question": query})

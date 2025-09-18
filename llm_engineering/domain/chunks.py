@@ -7,7 +7,6 @@ from .base import VectorBaseDocument
 from .types import DataCategory
 
 
-
 class Chunk(VectorBaseDocument, ABC):
     content: str
     platform: str
@@ -17,13 +16,11 @@ class Chunk(VectorBaseDocument, ABC):
     metadata: dict = Field(default_factory=dict)
 
 
-
 class PostChunk(Chunk):
     image: Optional[str] = None
 
     class Config:
         category = DataCategory.POSTS
-
 
 
 class ArticleChunk(Chunk):

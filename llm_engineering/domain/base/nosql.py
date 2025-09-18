@@ -45,7 +45,9 @@ class NoSQLBaseDocument(BaseModel, Generic[T], ABC):
         exclude_unset = kwargs.pop("exclude_unset", False)
         by_alias = kwargs.pop("by_alias", True)
 
-        parsed = self.model_dump(exclude_unset=exclude_unset, by_alias=by_alias, **kwargs)
+        parsed = self.model_dump(
+            exclude_unset=exclude_unset, by_alias=by_alias, **kwargs
+        )
 
         if "_id" not in parsed and "id" in parsed:
             parsed["_id"] = str(parsed.pop("id"))
@@ -91,7 +93,9 @@ class NoSQLBaseDocument(BaseModel, Generic[T], ABC):
 
             return new_instance
         except errors.OperationFailure:
-            logger.exception(f"Failed to retrieve document with filter options: {filter_options}")
+            logger.exception(
+                f"Failed to retrieve document with filter options: {filter_options}"
+            )
 
             raise
 
@@ -127,7 +131,11 @@ class NoSQLBaseDocument(BaseModel, Generic[T], ABC):
         logger.info(f"Collection name: {cls.get_collection_name()}")
         try:
             instances = collection.find(filter_options)
-            return [document for instance in instances if (document := cls.from_mongo(instance)) is not None]
+            return [
+                document
+                for instance in instances
+                if (document := cls.from_mongo(instance)) is not None
+            ]
         except errors.OperationFailure:
             logger.error("Failed to retrieve documents")
 

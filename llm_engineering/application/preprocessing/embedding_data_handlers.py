@@ -11,11 +11,11 @@ from llm_engineering.domain.embedded_chunks import (
 from llm_engineering.domain.queries import EmbeddedQuery, Query
 
 
-
 ChunkT = TypeVar("ChunkT", bound=Chunk)
 EmbeddedChunkT = TypeVar("EmbeddedChunkT", bound=EmbeddedChunk)
 
 embedding_model = EmbeddingModelSingleton()
+
 
 class EmbeddingDataHandler(ABC, Generic[ChunkT, EmbeddedChunkT]):
     """
@@ -29,7 +29,6 @@ class EmbeddingDataHandler(ABC, Generic[ChunkT, EmbeddedChunkT]):
 
         """
         return self.embed_batch([data_model])[0]
-    
 
     def embed_batch(self, data_model: list[ChunkT]) -> list[EmbeddedChunkT]:
         """
@@ -43,7 +42,7 @@ class EmbeddingDataHandler(ABC, Generic[ChunkT, EmbeddedChunkT]):
             for data_model, embedding in zip(data_model, embeddings, strict=False)
         ]
         return embedded_chunk
-    
+
     @abstractmethod
     def map_model(self, data_model: ChunkT, embedding: list[float]) -> EmbeddedChunkT:
         pass
@@ -66,7 +65,9 @@ class QueryEmbeddingHandler(EmbeddingDataHandler):
 
 
 class ArticleEmbeddingHandler(EmbeddingDataHandler):
-    def map_model(self, data_model: ArticleChunk, embedding: list[float]) -> EmbeddedArticleChunk:
+    def map_model(
+        self, data_model: ArticleChunk, embedding: list[float]
+    ) -> EmbeddedArticleChunk:
         return EmbeddedArticleChunk(
             id=data_model.id,
             content=data_model.content,
@@ -80,12 +81,14 @@ class ArticleEmbeddingHandler(EmbeddingDataHandler):
                 "embedding_model_id": embedding_model.model_id,
                 "embedding_size": embedding_model.embedding_size,
                 "max_input_length": embedding_model.max_input_length,
-            }
+            },
         )
-    
+
 
 class PostEmbeddingHandler(EmbeddingDataHandler):
-    def map_model(self, data_model: PostChunk, embedding: list[float]) -> EmbeddedPostChunk:
+    def map_model(
+        self, data_model: PostChunk, embedding: list[float]
+    ) -> EmbeddedPostChunk:
         return EmbeddedPostChunk(
             id=data_model.id,
             content=data_model.content,
@@ -98,5 +101,5 @@ class PostEmbeddingHandler(EmbeddingDataHandler):
                 "embedding_model_id": embedding_model.model_id,
                 "embedding_size": embedding_model.embedding_size,
                 "max_input_length": embedding_model.max_input_length,
-            }
+            },
         )

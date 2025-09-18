@@ -1,6 +1,7 @@
 from typing_extensions import Annotated
 from zenml import get_step_context, step
-#from loguru import logger
+
+# from loguru import logger
 from pydantic import TypeAdapter
 from typing import List
 
@@ -12,6 +13,7 @@ from llm_engineering.domain.documents import AnyDocument
 
 # Create the adapter once and reuse it across function calls
 ANY_DOCUMENT_LIST_ADAPTER = TypeAdapter(List[AnyDocument])
+
 
 @step
 def clean_documents(
@@ -25,11 +27,9 @@ def clean_documents(
 
     step_context = get_step_context()
     step_context.add_output_metadata(
-        output_name="cleaned_documents",
-        metadata=_get_metadata(cleaned_documents)
+        output_name="cleaned_documents", metadata=_get_metadata(cleaned_documents)
     )
     return cleaned_documents
-
 
 
 def _get_metadata(cleaned_documents: list[CleanedDocument]) -> dict:
@@ -51,12 +51,14 @@ def _get_metadata(cleaned_documents: list[CleanedDocument]) -> dict:
             metadata[category] = {}
         if "sources" not in metadata[category]:
             metadata[category]["sources"] = list()
-        
-        metadata[category]["num_documents"] = metadata[category].get("num_documents", 0) + 1
+
+        metadata[category]["num_documents"] = (
+            metadata[category].get("num_documents", 0) + 1
+        )
         metadata[category]["sources"].append(document.source_name)
-    
+
     for value in metadata.values():
         if isinstance(value, dict) and "sources" in value:
             value["sources"] = list(set(value["sources"]))
-    
+
     return metadata

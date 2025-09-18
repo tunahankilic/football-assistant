@@ -6,7 +6,9 @@ from loguru import logger
 try:
     import boto3
 except ModuleNotFoundError:
-    logger.warning("Couldn't load AWS or SageMaker imports. Run 'poetry install --with aws' to support AWS.")
+    logger.warning(
+        "Couldn't load AWS or SageMaker imports. Run 'poetry install --with aws' to support AWS."
+    )
 
 from llm_engineering.settings import settings
 
@@ -46,7 +48,10 @@ def create_sagemaker_user(username: str):
     logger.info(f"User '{username}' successfully created.")
     logger.info("Access Key ID and Secret Access Key successfully created.")
 
-    return {"AccessKeyId": access_key["AccessKeyId"], "SecretAccessKey": access_key["SecretAccessKey"]}
+    return {
+        "AccessKeyId": access_key["AccessKeyId"],
+        "SecretAccessKey": access_key["SecretAccessKey"],
+    }
 
 
 if __name__ == "__main__":

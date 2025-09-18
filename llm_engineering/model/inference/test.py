@@ -8,7 +8,8 @@ if __name__ == "__main__":
     text = "Write me a post about AWS SageMaker inference endpoints."
     logger.info(f"Running inference for text: '{text}'")
     llm = LLMInferenceSagemakerEndpoint(
-        endpoint_name=settings.SAGEMAKER_ENDPOINT_INFERENCE, inference_component_name=None
+        endpoint_name=settings.SAGEMAKER_ENDPOINT_INFERENCE,
+        inference_component_name=None,
     )
     answer = InferenceExecutor(llm, text).execute()
 

@@ -7,11 +7,11 @@ from loguru import logger
 from llm_engineering import settings
 from pipelines import (
     digital_data_etl,
-    #end_to_end_data,
+    end_to_end_data,
     #evaluating,
     export_artifact_to_json,
     feature_engineering,
-    #generate_datasets,
+    generate_datasets,
     #training,
 )
 
@@ -147,18 +147,20 @@ def main(
     if run_etl:
         run_args_etl = {}
         pipeline_args["config_path"] = root_dir / "configs" / etl_config_filename
+        logger.info(f"Using ETL config file: {pipeline_args['config_path']}")
         assert pipeline_args["config_path"].exists(), f"Config file not found: {pipeline_args['config_path']}"
         pipeline_args["run_name"] = f"digital_data_etl_run_{dt.now().strftime('%Y_%m_%d_%H_%M_%S')}"
+        logger.info(pipeline_args)
         digital_data_etl.with_options(**pipeline_args)(**run_args_etl)
 
-    """    
+ 
     if run_end_to_end_data:
         run_args_end_to_end = {}
         pipeline_args["config_path"] = root_dir / "configs" / "end_to_end_data.yaml"
         assert pipeline_args["config_path"].exists(), f"Config file not found: {pipeline_args['config_path']}"
         pipeline_args["run_name"] = f"end_to_end_data_run_{dt.now().strftime('%Y_%m_%d_%H_%M_%S')}"
         end_to_end_data.with_options(**pipeline_args)(**run_args_end_to_end)
-    """
+
     if run_export_artifact_to_json:
         run_args_etl = {}
         pipeline_args["config_path"] = root_dir / "configs" / "export_artifact_to_json.yaml"
@@ -172,13 +174,13 @@ def main(
         pipeline_args["run_name"] = f"feature_engineering_run_{dt.now().strftime('%Y_%m_%d_%H_%M_%S')}"
         feature_engineering.with_options(**pipeline_args)(**run_args_fe)
 
-    """
     if run_generate_instruct_datasets:
         run_args_cd = {}
         pipeline_args["config_path"] = root_dir / "configs" / "generate_instruct_datasets.yaml"
         pipeline_args["run_name"] = f"generate_instruct_datasets_run_{dt.now().strftime('%Y_%m_%d_%H_%M_%S')}"
         generate_datasets.with_options(**pipeline_args)(**run_args_cd)
 
+    """
     if run_generate_preference_datasets:
         run_args_cd = {}
         pipeline_args["config_path"] = root_dir / "configs" / "generate_preference_datasets.yaml"

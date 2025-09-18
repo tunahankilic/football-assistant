@@ -32,6 +32,12 @@ def chunk_article(text: str, min_length: int, max_length: int) -> list[str]:
     return extracts
 
 
+def chunk_document(text: str, min_length: int, max_length: int) -> list[str]:
+    """Alias for chunk_article()."""
+
+    return chunk_article(text, min_length, max_length)
+
+
 
 def chunk_text(text: str, chunk_size: int = 500, chunk_overlap: int = 50) -> list[str]:
     character_splitter = RecursiveCharacterTextSplitter(separators=["\n\n"], chunk_size=chunk_size, chunk_overlap=0)

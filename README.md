@@ -8,13 +8,15 @@ This project was developed with guidance from the [LLM Engineer's Handbook](http
 
 ## Features
 
-This project includes following components:
-* Data collection and generation
-* LLM fine tuning pipeline
-* RAG pipeline
-* AWS deployment
-* Comprehensive monitoring
-* Testing and evaluation
+The project provides:
+
+- Data collection and instruct data generation  
+- LLM fine-tuning pipeline  
+- Retrieval-Augmented Generation (RAG) pipeline  
+- Deployment on AWS  
+- End-to-end monitoring  
+- Rigorous testing and evaluation 
+
 
 
 

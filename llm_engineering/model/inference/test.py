@@ -5,7 +5,7 @@ from llm_engineering.model.inference.run import InferenceExecutor
 from llm_engineering.settings import settings
 
 if __name__ == "__main__":
-    text = "Write me a post about AWS SageMaker inference endpoints."
+    text = "Can you give me a general information about 4-1-4-1 tactic in football?"
     logger.info(f"Running inference for text: '{text}'")
     llm = LLMInferenceSagemakerEndpoint(
         endpoint_name=settings.SAGEMAKER_ENDPOINT_INFERENCE,

@@ -30,7 +30,6 @@ class SelfQueryTemplate(PromptTemplateFactory):
     prompt: str = """You are an AI language model assistant. Your task is to extract information from a user question.
     The required information that needs to be extracted is the source name or source id. 
     Your response should consists of only the extracted source name (e.g., Athletic) or id (e.g. 1345256), nothing else.
-    If the user question does not contain any source name or id, you should return the following token: none.
     
     For example:
     QUESTION 1:

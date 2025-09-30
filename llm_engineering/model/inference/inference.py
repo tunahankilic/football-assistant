@@ -7,7 +7,7 @@ try:
     import boto3
 except ModuleNotFoundError:
     logger.warning(
-        "Couldn't load AWS or SageMaker imports. Run 'uv add --group aws' to support AWS."
+        "Couldn't load AWS or SageMaker imports. Run 'poetry install --with aws' to support AWS."
     )
 
 
@@ -86,6 +86,7 @@ class LLMInferenceSagemakerEndpoint(Inference):
             invoke_args = {
                 "EndpointName": self.endpoint_name,
                 "ContentType": "application/json",
+                "Accept": "application/json",
                 "Body": json.dumps(self.payload),
             }
             if self.inference_component_name not in ["None", None]:

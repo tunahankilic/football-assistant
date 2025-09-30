@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     # Comet ML (during training)
     COMET_API_KEY: str | None = None
-    COMET_PROJECT: str = "twin"
+    COMET_PROJECT: str = "football-assistant"
 
     # --- Required settings when deploying the code. ---
     # --- Otherwise, default values values work fine. ---
@@ -119,3 +119,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings.load_settings()
+print(settings)

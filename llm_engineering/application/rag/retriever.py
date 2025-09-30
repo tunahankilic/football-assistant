@@ -44,6 +44,8 @@ class ContextRetriever:
             num_queries=len(n_generated_queries),
         )
 
+        logger.info(f"Generated queries:\n{n_generated_queries}")
+
         with concurrent.futures.ThreadPoolExecutor() as executor:
             search_tasks = [
                 executor.submit(self._search, _query_model, k)
@@ -53,12 +55,15 @@ class ContextRetriever:
             n_k_documents = [
                 task.result() for task in concurrent.futures.as_completed(search_tasks)
             ]
+            logger.info(f"Retrieved documents:\n{n_k_documents}")
             n_k_documents = utils.misc.flatten(n_k_documents)
             n_k_documents = list(set(n_k_documents))  # Remove duplicates
 
         logger.info(
-            "All documents retrieved successfully.", num_documents=len(n_k_documents)
+            f"All {len(n_k_documents)} documents retrieved successfully.", num_documents=len(n_k_documents)
         )
+        logger.info(f"Retrieved documents after deduplication:\n{len(n_k_documents)}")
+
 
         if len(n_k_documents) > 0:
             k_documents = self.rerank(query, chunks=n_k_documents, keep_top_k=k)
@@ -67,7 +72,7 @@ class ContextRetriever:
 
         return k_documents
 
-    def _search(self, query: Query, k: int = 3) -> list[EmbeddedChunk]:
+    def _search(self, query: Query, k: int) -> list[EmbeddedChunk]:
         assert k >= 3, "k should be >= 3"
 
         def _search_data_category(
@@ -89,7 +94,7 @@ class ContextRetriever:
 
             return data_category_odm.search(
                 query_vector=embedded_query.embedding,
-                limit=k // 3,
+                limit=k//2,
                 query_filter=query_filter,
             )
 

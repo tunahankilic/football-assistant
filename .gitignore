@@ -16,3 +16,4 @@ sagemaker_execution_role.json
 qdrant_storage/
 !evaluate_answers.ipynb
 .zen
+.ruff_cache/

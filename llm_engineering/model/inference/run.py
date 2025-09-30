@@ -1,5 +1,4 @@
 from __future__ import annotations
-from loguru import logger
 
 from llm_engineering.domain.inference import Inference
 from llm_engineering.settings import settings

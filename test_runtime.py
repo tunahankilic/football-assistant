@@ -1,7 +1,7 @@
 from llm_engineering.settings import settings
 
-
-import boto3, json
+import json
+import boto3
 
 client = boto3.client(
             "sagemaker-runtime",

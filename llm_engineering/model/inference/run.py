@@ -35,7 +35,9 @@ class InferenceExecutor:
 
     def execute(self) -> str:
         self.llm.set_payload(
-            inputs=self.prompt.format(query=self.query, context=self.context["Content"]).strip(),
+            inputs=self.prompt.format(
+                query=self.query, context=self.context["Content"]
+            ).strip(),
             parameters={
                 "max_new_tokens": settings.MAX_NEW_TOKENS_INFERENCE,
                 "repetition_penalty": 1.1,

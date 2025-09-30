@@ -13,12 +13,19 @@ def configure_opik() -> None:
             client = OpikConfigurator(api_key=settings.COMET_API_KEY)
             default_workspace = client._get_default_workspace()
         except Exception:
-            logger.warning("Default workspace not found. Setting workspace to None and enabling interactive mode.")
+            logger.warning(
+                "Default workspace not found. Setting workspace to None and enabling interactive mode."
+            )
             default_workspace = None
 
         os.environ["OPIK_PROJECT_NAME"] = settings.COMET_PROJECT
 
-        opik.configure(api_key=settings.COMET_API_KEY, workspace=default_workspace, use_local=False, force=True)
+        opik.configure(
+            api_key=settings.COMET_API_KEY,
+            workspace=default_workspace,
+            use_local=False,
+            force=True,
+        )
         logger.info("Opik configured successfully.")
     else:
         logger.warning(

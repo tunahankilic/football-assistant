@@ -1,5 +1,6 @@
 import os
-#import torch
+
+# import torch
 from trl import SFTTrainer
 from datasets import load_dataset, concatenate_datasets
 from transformers import TrainingArguments, TextStreamer
@@ -12,7 +13,6 @@ from huggingface_hub.utils import RepositoryNotFoundError
 
 import argparse
 from pathlib import Path
-
 
 
 alpaca_template = """Below is an instruction that describes a task. Write a response that appropriately completes the request.
@@ -66,7 +66,15 @@ def finetune(
     lora_rank: int = 32,
     lora_alpha: int = 32,
     lora_dropout: float = 0.0,
-    target_modules: List[str] = ["q_proj", "k_proj", "v_proj", "up_proj", "down_proj", "o_proj", "gate_proj"],  # noqa: B006
+    target_modules: List[str] = [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "up_proj",
+        "down_proj",
+        "o_proj",
+        "gate_proj",
+    ],  # noqa: B006
     chat_template: str = "chatml",
     learning_rate: float = 3e-4,
     num_train_epochs: int = 3,
@@ -76,27 +84,41 @@ def finetune(
     is_dummy: bool = True,
 ) -> tuple:
     model, tokenizer = load_model(
-        model_name, max_seq_length, load_in_4bit, lora_rank, lora_alpha, lora_dropout, target_modules, chat_template
+        model_name,
+        max_seq_length,
+        load_in_4bit,
+        lora_rank,
+        lora_alpha,
+        lora_dropout,
+        target_modules,
+        chat_template,
     )
     EOS_TOKEN = tokenizer.eos_token
     print(f"Setting EOS_TOKEN to {EOS_TOKEN}")  # noqa
 
     if is_dummy is True:
         num_train_epochs = 1
-        print(f"Training in dummy mode. Setting num_train_epochs to '{num_train_epochs}'")  # noqa
+        print(
+            f"Training in dummy mode. Setting num_train_epochs to '{num_train_epochs}'"
+        )  # noqa
         print(f"Training in dummy mode. Reducing dataset size to '400'.")  # noqa
 
     if finetuning_type == "sft":
 
         def format_samples_sft(examples):
             text = []
-            for instruction, output in zip(examples["instruction"], examples["output"], strict=False):
+            for instruction, output in zip(
+                examples["instruction"], examples["output"], strict=False
+            ):
                 message = alpaca_template.format(instruction, output) + EOS_TOKEN
                 text.append(message)
 
             return {"text": text}
 
-        dataset1 = load_dataset(f"{dataset_huggingface_workspace}/football-instruction-dataset", split="train")
+        dataset1 = load_dataset(
+            f"{dataset_huggingface_workspace}/football-instruction-dataset",
+            split="train",
+        )
         dataset2 = load_dataset("mlabonne/FineTome-Alpaca-100k", split="train[:10000]")
         dataset = concatenate_datasets([dataset1, dataset2])
         if is_dummy:
@@ -106,7 +128,9 @@ def finetune(
                 print("Dummy mode active. Failed to trim the dataset to 400 samples.")  # noqa
         print(f"Loaded dataset with {len(dataset)} samples.")  # noqa
 
-        dataset = dataset.map(format_samples_sft, batched=True, remove_columns=dataset.column_names)
+        dataset = dataset.map(
+            format_samples_sft, batched=True, remove_columns=dataset.column_names
+        )
         dataset = dataset.train_test_split(test_size=0.05)
 
         print("Training dataset example:")  # noqa
@@ -155,10 +179,18 @@ def inference(
     inputs = tokenizer([message], return_tensors="pt").to("cuda")
 
     text_streamer = TextStreamer(tokenizer)
-    _ = model.generate(**inputs, streamer=text_streamer, max_new_tokens=max_new_tokens, use_cache=True)
+    _ = model.generate(
+        **inputs, streamer=text_streamer, max_new_tokens=max_new_tokens, use_cache=True
+    )
 
 
-def save_model(model: Any, tokenizer: Any, output_dir: str, push_to_hub: bool = False, repo_id: Optional[str] = None):
+def save_model(
+    model: Any,
+    tokenizer: Any,
+    output_dir: str,
+    push_to_hub: bool = False,
+    repo_id: Optional[str] = None,
+):
     model.save_pretrained_merged(output_dir, tokenizer, save_method="merged_16bit")
 
     if push_to_hub and repo_id:
@@ -166,7 +198,9 @@ def save_model(model: Any, tokenizer: Any, output_dir: str, push_to_hub: bool = 
         model.push_to_hub_merged(repo_id, tokenizer, save_method="merged_16bit")
 
 
-def check_if_huggingface_model_exists(model_id: str, default_value: str = "tunahankilic/LlamaFootball-3.1-8B") -> str:
+def check_if_huggingface_model_exists(
+    model_id: str, default_value: str = "tunahankilic/LlamaFootball-3.1-8B"
+) -> str:
     api = HfApi()
 
     try:
@@ -186,9 +220,18 @@ if __name__ == "__main__":
     parser.add_argument("--num_train_epochs", type=int, default=3)
     parser.add_argument("--per_device_train_batch_size", type=int, default=2)
     parser.add_argument("--learning_rate", type=float, default=3e-4)
-    parser.add_argument("--dataset_huggingface_workspace", type=str, default="tunahankilic")
-    parser.add_argument("--model_output_huggingface_workspace", type=str, default="tunahankilic")
-    parser.add_argument("--is_dummy", type=bool, default=False, help="Flag to reduce the dataset size for testing")
+    parser.add_argument(
+        "--dataset_huggingface_workspace", type=str, default="tunahankilic"
+    )
+    parser.add_argument(
+        "--model_output_huggingface_workspace", type=str, default="tunahankilic"
+    )
+    parser.add_argument(
+        "--is_dummy",
+        type=bool,
+        default=False,
+        help="Flag to reduce the dataset size for testing",
+    )
     parser.add_argument(
         "--finetuning_type",
         type=str,
@@ -197,7 +240,9 @@ if __name__ == "__main__":
         help="Parameter to choose the finetuning stage.",
     )
 
-    parser.add_argument("--output_data_dir", type=str, default=os.environ["SM_OUTPUT_DATA_DIR"])
+    parser.add_argument(
+        "--output_data_dir", type=str, default=os.environ["SM_OUTPUT_DATA_DIR"]
+    )
     parser.add_argument("--model_dir", type=str, default=os.environ["SM_MODEL_DIR"])
     parser.add_argument("--n_gpus", type=str, default=os.environ["SM_NUM_GPUS"])
 
@@ -206,8 +251,12 @@ if __name__ == "__main__":
     print(f"Num training epochs: '{args.num_train_epochs}'")  # noqa
     print(f"Per device train batch size: '{args.per_device_train_batch_size}'")  # noqa
     print(f"Learning rate: {args.learning_rate}")  # noqa
-    print(f"Datasets will be loaded from Hugging Face workspace: '{args.dataset_huggingface_workspace}'")  # noqa
-    print(f"Models will be saved to Hugging Face workspace: '{args.model_output_huggingface_workspace}'")  # noqa
+    print(
+        f"Datasets will be loaded from Hugging Face workspace: '{args.dataset_huggingface_workspace}'"
+    )  # noqa
+    print(
+        f"Models will be saved to Hugging Face workspace: '{args.model_output_huggingface_workspace}'"
+    )  # noqa
     print(f"Training in dummy mode? '{args.is_dummy}'")  # noqa
     print(f"Finetuning type: '{args.finetuning_type}'")  # noqa
 
@@ -232,6 +281,13 @@ if __name__ == "__main__":
         )
         inference(model, tokenizer)
 
-        sft_output_model_repo_id = f"{args.model_output_huggingface_workspace}/LlamaFootball-3.1-8B"
-        save_model(model, tokenizer, "model_sft", push_to_hub=True, repo_id=sft_output_model_repo_id)
-
+        sft_output_model_repo_id = (
+            f"{args.model_output_huggingface_workspace}/LlamaFootball-3.1-8B"
+        )
+        save_model(
+            model,
+            tokenizer,
+            "model_sft",
+            push_to_hub=True,
+            repo_id=sft_output_model_repo_id,
+        )

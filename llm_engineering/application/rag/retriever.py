@@ -60,10 +60,10 @@ class ContextRetriever:
             n_k_documents = list(set(n_k_documents))  # Remove duplicates
 
         logger.info(
-            f"All {len(n_k_documents)} documents retrieved successfully.", num_documents=len(n_k_documents)
+            f"All {len(n_k_documents)} documents retrieved successfully.",
+            num_documents=len(n_k_documents),
         )
         logger.info(f"Retrieved documents after deduplication:\n{len(n_k_documents)}")
-
 
         if len(n_k_documents) > 0:
             k_documents = self.rerank(query, chunks=n_k_documents, keep_top_k=k)
@@ -94,7 +94,7 @@ class ContextRetriever:
 
             return data_category_odm.search(
                 query_vector=embedded_query.embedding,
-                limit=k//2,
+                limit=k // 2,
                 query_filter=query_filter,
             )
 

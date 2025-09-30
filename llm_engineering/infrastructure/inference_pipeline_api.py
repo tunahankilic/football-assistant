@@ -9,7 +9,10 @@ from llm_engineering.application.rag.retriever import ContextRetriever
 from llm_engineering.application.utils import misc
 from llm_engineering.domain.embedded_chunks import EmbeddedChunk
 from llm_engineering.infrastructure.opik_utils import configure_opik
-from llm_engineering.model.inference import InferenceExecutor, LLMInferenceSagemakerEndpoint
+from llm_engineering.model.inference import (
+    InferenceExecutor,
+    LLMInferenceSagemakerEndpoint,
+)
 
 configure_opik()
 
@@ -27,7 +30,8 @@ class QueryResponse(BaseModel):
 @opik.track
 def call_llm_service(query: str, context: str | None) -> str:
     llm = LLMInferenceSagemakerEndpoint(
-        endpoint_name=settings.SAGEMAKER_ENDPOINT_INFERENCE, inference_component_name=None
+        endpoint_name=settings.SAGEMAKER_ENDPOINT_INFERENCE,
+        inference_component_name=None,
     )
     answer = InferenceExecutor(llm, query, context).execute()
     logger.info(f"Answer: '{answer}'")
@@ -40,7 +44,9 @@ def rag(query: str) -> str:
     retriever = ContextRetriever(mock=False)
     documents = retriever.search(query, k=4)
     context = EmbeddedChunk.to_context(documents)
-    logger.info(f"Retriever returned {len(documents)} docs, context length={len(context)}")
+    logger.info(
+        f"Retriever returned {len(documents)} docs, context length={len(context)}"
+    )
     answer = call_llm_service(query, context)
 
     opik_context.update_current_trace(
